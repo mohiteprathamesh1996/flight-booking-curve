@@ -9,7 +9,7 @@ ui <- fluidPage(
         "Select Departure Date:",
         choices = departure_dates
       ),
-      selectInput("route", "Select Route:", choices = routes),
+      selectInput("route", "Select Sector:", choices = routes),
       sliderInput(
         "test_slice",
         "Set Testing Slice (%):",
@@ -29,8 +29,7 @@ ui <- fluidPage(
     ),
     mainPanel(
       # h3("Prediction Plot"),
-      div(plotlyOutput("forecast_plot"), style = "width: 90%; margin: auto;")
-      ,
+      div(plotlyOutput("forecast_plot"), style = "width: 90%; margin: auto;"),
       
       uiOutput("historical_title"),
       plotOutput("historical_plots"),
