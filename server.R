@@ -15,9 +15,9 @@ server <- function(input, output) {
     
     h3(
       paste(
-        "Historical Trends for", 
+        "Historical Trends Along", 
         input$route,
-        "route"
+        "Sector"
         )
       )  
   })
@@ -30,11 +30,12 @@ server <- function(input, output) {
         ggplot(
           aes(
             x = `Days Before Departure`,
-            y = BookingRateAccelaration
+            y = AvgPickUp
           )
         ) +
         geom_line(na.rm = TRUE, color = "#D71920", size=0.8) +
         theme_bw(),
+      
       historical_summary %>%
         filter(Origin_Destination == input$route) %>%
         mutate(`Days Before Departure` = -1 * `Days Before Departure`) %>%
@@ -64,9 +65,8 @@ server <- function(input, output) {
         `Date Before Departure`,
         `Seats Sold`,
         DailyBookingRate,
-        BookingRateAccelaration,
-        PercentageTargetReached,
-        LF_PercentageTargetReached
+        LF_PercentageTargetReached,
+        AvgPickUp
       ) %>%
       arrange(`Date Before Departure`) %>%
       drop_na()
@@ -108,8 +108,9 @@ server <- function(input, output) {
       set_engine("prophet") %>%
       fit(
         `Seats Sold` ~ `Date Before Departure` +
-          BookingRateAccelaration +
-          LF_PercentageTargetReached,
+          DailyBookingRate +
+          LF_PercentageTargetReached +
+          AvgPickUp,
         training(splits)
       )
     
@@ -157,9 +158,8 @@ server <- function(input, output) {
           select(
             `Days Before Departure`,
             DailyBookingRate,
-            BookingRateAccelaration,
-            PercentageTargetReached,
-            LF_PercentageTargetReached
+            LF_PercentageTargetReached,
+            AvgPickUp
           ),
         by = "Days Before Departure"
       )
